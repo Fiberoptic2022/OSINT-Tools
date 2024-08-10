@@ -7,24 +7,38 @@ import json
 
 
 class VirusTotalApp(ctk.CTk):
-    def __init__(self, checker):
+    def __init__(self, virustotal_checker: VirusTotalChecker):
         super().__init__()
 
-        self.virustotal_checker = checker
+        self.virustotal_checker = virustotal_checker
         self.title("VirusTotal Checker")
         self.geometry("600x400")
 
         # Label
-        self.label = ctk.CTkLabel(self, text="Enter IP Addresses (comma-separated):")
+        self.label = ctk.CTkLabel(self, text="Get the latest scan results from VirusTotal")
         self.label.pack(pady=10)
 
         # Entry field
         self.entry = ctk.CTkEntry(self, width=500)
         self.entry.pack(pady=10)
 
+        self.label = ctk.CTkLabel(self, text="Enter Domains (comma-separated):")
+        self.label.pack(pady=10)
+
+        self.label = ctk.CTkLabel(self, text="Enter URLs (comma-separated):")
+        self.label.pack(pady=10)
+
+        self.label = ctk.CTkLabel(self, text="Enter File Hashes (comma-separated):")
+        self.label.pack(pady=10)
+
+        self.label = ctk.CTkLabel(self, text="Enter IPs (comma-separated):")
+        self.label.pack(pady=10)
+
+
+
         # Submit button
-        self.submit_button = ctk.CTkButton(self, text="Check IPs", command=self.check_ip)
-        self.submit_button.pack(pady=10)
+        self.submit_button_ip = ctk.CTkButton(self, text="Check IP", command=self.check_ip)
+        self.submit_button_ip.pack(pady=10)
 
         self.submit_button_domain = ctk.CTkButton(self, text="Check Domain", command=self.check_domain)
         self.submit_button_domain.pack(pady=10)
@@ -32,7 +46,7 @@ class VirusTotalApp(ctk.CTk):
         self.submit_button_url = ctk.CTkButton(self, text="Check URL", command=self.check_url)
         self.submit_button_url.pack(pady=10)
 
-        self.submit_button_file = ctk.CTkButton(self, text="Check File", command=self.checker.check_file)
+        self.submit_button_file = ctk.CTkButton(self, text="Check File", command=self.check_file)
         self.submit_button_file.pack(pady=10)
 
         self.submit_button_ips = ctk.CTkButton(self, text="Check IPs", command=self.check_ips)
@@ -91,7 +105,8 @@ class VirusTotalApp(ctk.CTk):
 
         # Run the checks and display results
         results = self.virustotal_checker.check_domain(domain)
-        self.result_textbox.insert(ctk.END, results)
+        actionable_data = self.virustotal_checker._extract_actionable_data(results)
+        self.result_textbox.insert(ctk.END, actionable_data)
 
     def check_file(self):
         file_hash = self.entry.get()
@@ -216,3 +231,20 @@ class VirusTotalApp(ctk.CTk):
     def close_app(self):
         self.virustotal_checker.close()
         self.destroy()
+
+    def close(self):
+        self.virustotal_checker.close()
+        super().close()
+
+
+if __name__ == "__main__":
+    # Initialize the VirusTotal Checker
+    virustotal_checker = VirusTotalChecker()
+
+    # Initialize the GUI
+    app = VirusTotalApp(virustotal_checker)
+    app.mainloop()
+
+    # Close the VirusTotal Checker
+    virustotal_checker.close()
+
