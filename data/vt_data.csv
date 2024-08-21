@@ -1,0 +1,6 @@
+date,type,value,result
+2021-01-01,url,https://www.example.com,malicious
+2021-01-02,file,e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855,clean
+2021-01-03,ip,8.8.8.8,malicious
+2021-01-04,domain,google.com,malicious
+2021-01-05,url,https://www.example.com,malicious
